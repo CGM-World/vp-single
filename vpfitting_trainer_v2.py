@@ -5,6 +5,7 @@ one cloud model
 
 import numpy as np
 import os
+import h5py
 import pandas as pd
 # import plotting tools
 import matplotlib
@@ -31,9 +32,13 @@ date = time.strftime('%Y-%m-%d_%Hh_%Mm_%Ss', time.localtime(seconds))  # date an
 sys.stdout = open('%s_%s.out' % (model_id, date), 'w')
 sys.stderr = open('%s_%s.err' % (model_id, date), 'w')
 datadir = '.'
-spec1 = np.loadtxt('%s/MgII2796data.txt' % datadir)
-spec2 = np.loadtxt('%s/MgII2803data.txt' % datadir)
-labels = np.loadtxt('%s/labels.txt' % datadir)
+
+with h5py.File('%s/MgII2796data.h5' % datadir, 'r') as hdf1:
+    spec1 = np.array(hdf1.get('dataset1'))
+with h5py.File('%s/MgII2803data.h5' % datadir, 'r') as hdf2:
+    spec2 = np.array(hdf2.get('dataset1'))
+
+labels = np.loadtxt('%s/../labels.txt' % datadir)
 
 number_of_samples = len(labels)
 indices = list(range(number_of_samples))
@@ -41,7 +46,6 @@ parameters = ['velocity', 'column density', 'b parameter']
 
 spec = np.concatenate((np.expand_dims(spec1, axis=2), np.expand_dims(spec2, axis=2)), axis=2)
 # (number_of_samples, 450, 2)
-
 
 x_train, x_test, y_train, y_test, indices_train, indices_test = train_test_split(spec, labels, indices, test_size=0.1,
                                                                                  random_state=42)

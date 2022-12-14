@@ -1,0 +1,9 @@
+C ---------- sysanal.inp --------------------------------------------------------------------------------
+"/fs1/project/cgm_world/code/fortran/input_files/atoms.dat"	ionfile = the file containing transitions and atomic data
+0						interact = interactive processing? (1=on,0=off)
+3.						siglevel = signifance level for EWs and AODs limits
+45000.						R_isf = effective instrumental spread function R (FWHM)
+1.e-6						toler = tolerance for integrals and root solvers
+1.2						plt_scale = Y factor for window scaling
+1                           			zuser = use the zabs.dat file for the redshift (1=ON,0=OFF) 
+0						ewreguser = use the .ewreg files for the regions (1=ON,0=OFF)

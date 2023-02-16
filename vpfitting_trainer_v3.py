@@ -80,7 +80,7 @@ for i in range(3):
 
 num_input = 450
 num_classes = 3
-epochs = 3
+epochs = 30
 batch_size = 32
 
 inputs = layers.Input(shape=(450, 2))

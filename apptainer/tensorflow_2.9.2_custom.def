@@ -1,0 +1,35 @@
+bootstrap: docker
+from: tensorflow/tensorflow:2.9.2-gpu-jupyter
+
+%runscript
+exec "$@"
+
+%environment
+export TZ="America/Denver"
+
+%post
+# install additional system/apt packages
+export DEBIAN_FRONTEND=noninteractive
+apt -y update
+apt -y install build-essential gfortran
+
+# Install code-server
+curl -fsSL https://code-server.dev/install.sh | sh
+
+# Install Jupyter Lab
+python3 -m pip install --upgrade jupyterlab
+
+# Install Additional Python Packages
+python3 -m pip install \
+        numpy \
+        astropy \
+        matplotlib \
+        progressbar \
+        scikit-learn \
+	pandas \
+	h5py \
+	tables \
+        scipy \
+	pyDOE \
+	keras-tuner 
+

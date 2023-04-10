@@ -1,0 +1,10 @@
+Code		Mem Used	Runtime		Description
+specgen.py	21.17 GB	20:35:12	Generated 1e6 MgII doublets
+specgen.py	21.17 GB	2-03:37:59	Generated 1e6 MgII doublets, no cleaning
+specgen.py	29.26 GB	2-23:57:35	Generated 1e6 MgII doublets, vel window [-350, 350]
+specgen.py	25.26 GB	2-13:44:02	Generated 1e6 MgII doublets, vel window [-250, 250]
+specgen.py	1.74 GB		05:00:52	Generated 1e5 MgII doublets
+specgen.py	244.05 MB	00:29:22	Generated 1e4 MgII doublets
+vp_trainer.py	12.92 GB	01:48:29	Trained CNN on 1e6 MgII doublets, 25 epochs
+vp_trainer.py	13.54 GB	05:34:48	Trained CNN on 1e6 MgII doublets, 100 epochs
+vp_trainer.py	3.20 GB		00:34:49	Trained CNN on 1e5 MgII doublets, 100 epochs

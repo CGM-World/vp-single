@@ -1,7 +1,17 @@
+# Ignore results
 1cloud*
 checkpoint*
-loss.png
 MgII*
+loss.png
+
+# Ignore tar file
 p3.0.tar.gz
+
+# Ignore any swap file
 *.swp
+
+# Ignore our .sif file
+tensorflow_2.9.2_custom.sif
+
+# Ignore everything in our workspace directories
 workspace/*

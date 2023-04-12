@@ -1,5 +1,5 @@
 # Generates an input number n of absorption line spectra for a given line list
-# last updated: 2023-04-07
+# last updated: 2023-04-10
 # Bryson Stemock and Avery Lee
 
 # Imports
@@ -8,7 +8,6 @@ import sys
 import h5py
 import time
 import random
-import multiprocessing
 import numpy as np
 import pandas as pd
 from pyDOE import lhs
@@ -57,6 +56,15 @@ except ValueError:
         sys.exit("ERROR: File not found. Please provide an integer number of spectra to generate or provide " +
                  "the path to an hdf5 data file to recreate spectra using its stored parameters.")
 
+# Set flag for whether to use multiprocessing or not
+if (len(sys.argv) > 2 and int(sys.argv[2]) == 1 ):
+    print("Running as single process...")
+    multi = False
+else:
+    import multiprocessing
+    print("Running as multiple processes...")
+    multi = True
+
 # Declare constants to be used
 zabs = 0.000000                                                                             # absorber redshift
 vel_range = [-250, 250]                                                                     # velocity window
@@ -74,8 +82,8 @@ MgII2803_builder = []
 
 # GENERATION #
 
-# Function to generate data. Processes will share this workload
-def generate(arr, result, index):
+# Function to generate data. If using multiprocessing, processes will share this workload
+def generate(arr, results, index):
 
     # Define builder lists
     full_cube_labels_b = []
@@ -118,9 +126,9 @@ def generate(arr, result, index):
         MgII2803_b.append(list(map(float, MgII2803.f_norm)))                            # MgII2803 ransition flux to transition
 
     # Save the results
-    result[index] = [full_cube_labels_b, full_cube_noise_log_b, labels_b, noise_log_b, MgII2796_b, MgII2803_b]
+    results[index] = [full_cube_labels_b, full_cube_noise_log_b, labels_b, noise_log_b, MgII2796_b, MgII2803_b]
 
-# Split the work of generation among a specified number of processes
+# Function to split the work of generation among a specified number of processes
 def run_processes():
     process_count = 56                              # Matches number of cores on Discovery
     processes = [None] * process_count              # Array to hold our processes
@@ -158,7 +166,19 @@ def run_processes():
             MgII2796_builder.extend(results[i][4])
             MgII2803_builder.extend(results[i][5])
 
-run_processes()
+# Run processes or call the generate function with a single process
+if (multi):
+    run_processes()
+else:
+    arr = list(range(v.shape[0]))
+    results = [None]
+    generate(arr, results, index=0)
+    full_cube_labels_builder = results[0][0]
+    full_cube_noise_log_builder = results[0][1]
+    labels_builder = results[0][2]
+    noise_log_builder = results[0][3]
+    MgII2796_builder = results[0][4]
+    MgII2803_builder = results[0][5]
 
 # SAVING RESULTS #
 
@@ -181,4 +201,4 @@ with h5py.File("data.h5", "w") as hdf:
 
 # Stop timer and print time
 toc = time.perf_counter()
-print("Multiprocessing time: ", (toc - tic))
+print("Time: ", (toc - tic))
